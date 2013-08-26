@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="films/css/style.css" type="text/css"
+	media="screen" />
+<link href="films/css/stars.css" rel="stylesheet" type="text/css" />
+<script src="films/js/jquery.min.js"></script>
+<title>Smart TV</title>
+</head>
+<body>
+	<div id="test"></div>
+	<!-- The JavaScript -->
+	<script type="text/javascript">
+		var ip = "http://10.120.112.11:8080/";
+		var projPrefix = "smart-server/";
+		var recommendNewsSuffix = "api/clive/recommend-news/";
+		var channel_code = "322fa7b66243b8d0edef9d761a42f263";
+		/* var href = ip + projPrefix + recommendNewsSuffix + channel_code
+				+ "?size=1"; */
+		var href = ip + projPrefix + "api/clive/test";
+		$.ajax({
+			url : "http://10.120.112.11:8080/smart-server/api/clive/test",
+			cache : false,
+			dataType : "json",
+			async : false,
+			beforeSend : function(XMLHttpRequest) {
+				//ShowLoading();
+			},
+			success : function(data, textStatus) {
+				alert(data);
+			},
+			complete : function(XMLHttpRequest, textStatus) {
+				//HideLoading();
+			},
+			error : function(xhr, status, error) {
+				var err = eval("(" + xhr.responseText + ")");
+				alert(err.Message);
+			}
+		});
+
+		/* var xmlhttp;
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				document.getElementById("test").innerHTML = xmlhttp.responseText;
+			}
+		}
+		xmlhttp.open("GET", href, true);
+		xmlhttp.send(); */
+	</script>
+</body>
+</html>

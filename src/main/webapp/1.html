@@ -1,0 +1,357 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<title>相同图片搜索结果-百度识图</title>
+<style>
+#filterImg {
+	overflow: hidden;
+}
+
+#filterImg dl {
+	text-align: left;
+	float: left;
+	width: 24.9%;
+	height: 170px;
+	padding: 10px 0 2px 0;
+	margin: 0px;
+}
+</style>
+<link href="css/imagepc1224.css?v=20130315" rel="stylesheet"
+	type="text/css"></link>
+<script type="text/javascript">
+	var BD = BD || {};
+	BD.STU = BD.STU || {};
+	BD.STU.tplConf = {
+		imgName : "2.jpg",
+		imgQuerySign : "731338422,705834918",
+		dispNum : 1,
+		listNum : 1,
+		rank : 0,
+		beforeCt : 2,
+		shituRetNum : 1,
+		faceRetNum : 0,
+		keyword : "",
+		keywordEnc : "",
+		bdNeedBaike : "0"
+	};
+	var _u = location.href.split("&");
+	for ( var i in _u) {
+		var q = _u[i];
+		if (q && q.indexOf("=") > -1) {
+			var rs = q.split("=");
+			if (rs[0] == "shituRetNum" && rs[1] != "") {
+				BD.STU.tplConf.shituRetNum = rs[1] * 1;
+			} else if (rs[0] == "faceRetNum" && rs[1] != "") {
+				BD.STU.tplConf.faceRetNum = rs[1] * 1;
+			}
+		}
+	}
+	BD.STU.dateFilterData = [ {
+		"value" : "0",
+		"text" : "全部时间",
+		"isD" : 1
+	}, {
+		"value" : "1",
+		"text" : "最近3个月",
+		"num" : "0"
+	}, {
+		"value" : "2",
+		"text" : "最近半年",
+		"num" : "0"
+	}, {
+		"value" : "3",
+		"text" : "最近1年",
+		"num" : "0"
+	}, {
+		"value" : "4",
+		"text" : "最近2年",
+		"num" : "0"
+	}, {
+		"value" : "5",
+		"text" : "2年以前",
+		"num" : "1"
+	}, {
+		"value" : "null",
+		"text" : "精确时间",
+		"type" : "exact",
+		"date_start" : "",
+		"date_end" : ""
+	} ];
+	BD.STU.tabsConf = [ {
+		text : '相同图片',
+		className : 'tab-item-shitu',
+		name : 'stu'
+	}, {
+		text : '人脸搜索',
+		className : 'tab-item-face',
+		name : 'face',
+		args : {
+			stt : 1,
+			tn : 'baiduimagefacepc',
+			tab : 0,
+			pn : 0,
+			date_filter : 0,
+			size_filter : -1
+		}
+	} ];
+	if (BD.STU.tplConf.shituRetNum < 1) {
+		var s = location.href;
+		s = s.replace('&tn=baiduimagepc&', '&tn=baiduimagefacepc&').replace(
+				'&stt=0&', '&stt=1&')
+				+ '&tab=0' + '&oritn=stu';
+		location.href = s;
+	} else if (BD.STU.tplConf.faceRetNum < 1) {
+		BD.STU.tabsConf.length = 1;
+		window.__hasFace = '0';
+	} else {
+		window.__hasFace = '1';
+	}
+</script>
+<script type="text/javascript" src="js/tsug.js"></script>
+</head>
+<body>
+	<div id="wrapper">
+		<!-- 页眉 -->
+		<div id="tp">
+			<a href="http://image.baidu.com/">百度图片首页</a>&nbsp;|&nbsp;<a
+				href="help.html">帮助</a>&nbsp;|&nbsp;<a
+				href="http://tousu.baidu.com/image/add#2">意见反馈</a>
+		</div>
+		<!-- 搜索-->
+		<div id="search">
+			<div class="s_nav">
+				<a class="s_logo" href="http://image.baidu.com"><img height="38"
+					width="117" alt="到百度图片首页"
+					src="http://img.baidu.com/img/image/imglogo.gif"></a>
+				<div class="s_tab">
+					<a wdfield="word" onmousedown="setHeadUrl(this)"
+						href="http://news.baidu.com/">新闻</a> <a wdfield="wd"
+						onmousedown="setHeadUrl(this)" href="http://www.baidu.com/">网页</a>
+					<a onmousedown="setHeadUrl(this)" wdfield="kw"
+						href="http://tieba.baidu.com/">贴吧</a> <a wdfield="word"
+						onmousedown="setHeadUrl(this)" href="http://zhidao.baidu.com/">知道</a>
+					<a onmousedown="setHeadUrl(this)" class="eng" wdfield="word"
+						href="http://music.baidu.com/">音乐</a> <b>图片</b> <a wdfield="word"
+						onmousedown="setHeadUrl(this)" href="http://video.baidu.com/">视频</a>
+					<a onmousedown="setMapUrl(this)" href="http://map.baidu.com/">地图</a>
+					<a onmousedown="setHeadUrl(this)" wdfield="word"
+						href="http://baike.baidu.com/">百科</a>
+				</div>
+			</div>
+			<form name="f1" action="http://image.baidu.com/i" style="_zoom: 1;">
+				<input type="hidden" value="baiduimage" name="tn"><input
+					type="hidden" value="201326592" name="ct"><input
+					type="hidden" value="2" name="cl"><input type="hidden"
+					value="-1" name="lm"><input type="hidden" value="result"
+					name="fm"><input type="hidden" value="" name="fr"><input
+					type="hidden" value="1" name="sf"><input type="hidden"
+					value="" name="fmq"><input type="hidden" value="" name="pv"><input
+					type="hidden" value="0" name="ic"><input type="hidden"
+					value="" name="z"><input type="hidden" value="1" name="se"><input
+					type="hidden" value="0" name="showtab"><input type="hidden"
+					value="0" name="fb"><input type="hidden" value=""
+					name="width"><input type="hidden" value="" name="height"><input
+					type="hidden" value="0" name="face"><input type="hidden"
+					value="2" name="istype"><span class="s_ipt_wr"><input
+					maxlength="100" value="" class="s_ipt" name="word" id="kw"
+					autocomplete="off"></span><span class="s_btn_wr"><input
+					type="submit" onmouseout="this.className='s_btn'"
+					onmousedown="this.className='s_btn s_btn_h'" class="s_btn"
+					value="百度一下"></span>
+			</form>
+			<div id="stcontent">
+				<a class="sttb" id="sttb" href="javascript:void(0)"
+					style="display: none" title="上传图片，搜索相关信息">stu</a>
+				<div id="stsug" class="stsug" style="display: none">
+					<div id="sthead">百度识图</div>
+					<div class="stf">
+						<form id="form2" target="_self" enctype="multipart/form-data"
+							action="/i?rt=0&rn=10&ct=0&stt=0&tn=baiduimagepc" method="post"
+							name="form2">
+							<span>粘贴图片网址</span><img id="sthelp" width="13" height="13"
+								src="images/mark.gif" /><span class="partition">|</span><a
+								id="uploadImg" href="javascript:void(0)">从本地上传<input
+								type="file" name="image" id="stfile" size="1"><span
+								id="flashcontent"></span></a>
+						</form>
+					</div>
+					<form id="form1" target="_self" enctype="multipart/form-data"
+						action="/i" method="get" name="form1">
+						<div id="sturl">
+							<span class="stuwr"><input type="text" id="stuurl"
+								value="" autocomplete="off" class="stuurl" maxlength="250"
+								size="42" name="objurl" /></span><span class="stsb"><input
+								type="submit" id="sbobj" class="stsb2"
+								onmousedown="this.className='stsb2 stsb3'"
+								onmouseout="this.className='stsb2'" value="识图一下" /></span>
+						</div>
+						<div class="dragtg" id="dragtg">提示：您也可以把图片拖到这里</div>
+						<input name="filename" id="filename" value="" type="hidden"><input
+							name="rt" value="0" type="hidden"><input name="rn"
+							value="10" type="hidden"><input id="stftn" name="ftn"
+							value="searchpcstu" type="hidden"><input name="ct"
+							value="1" type="hidden"><input name="stt" value="0"
+							type="hidden"><input name="tn" value="baiduimagepc"
+							type="hidden">
+					</form>
+					<div class="stmore" id="stmore" style="display: none;">
+						<b>如何粘贴图片网址</b>
+						<ul>
+							<li>右键点击网页上的图片，选择“复制图片网址”；</li>
+							<li>在搜索框中，粘贴该网址(Ctrl+V)，点击“识图一下”</li>
+						</ul>
+						<div>
+							<a href="/help.html" target="_blank">查看详细帮助&gt;&gt;</a>
+						</div>
+						<div class="left-border"></div>
+						<div class="right-border"></div>
+					</div>
+					<a class="closest" href="javascript:void(0)" id="closest"
+						title="关闭">关闭</a>
+					<div id="point" style="display: none;">
+						<img src="http://list.image.baidu.com/t/loading.gif" /><span>上传中，请稍候...</span>
+					</div>
+					<div id="dragtip" style="display: none;">
+						<div>百度识图</div>
+						<span>将图片拖到此处</span>
+					</div>
+					<div class="left-border"></div>
+					<div class="right-border"></div>
+				</div>
+			</div>
+		</div>
+		<!-- 内容 -->
+		<div id="container">
+			<div id="container_main">
+				<ul id="siblingTabs" class="clearfix"></ul>
+				<div id="ori" class="clearfix">
+					<div class="ori_cont">
+						<div class="ori-img-wrap">
+							<img onerror='orierr(event)' alt="您上传的图片"
+								src="http://tutu.baidu.com/122/831/731338422,705834918.jpg" />
+						</div>
+						<div class="ori-img-info">
+							<p>您上传的图片尺寸:100x148</p>
+							<div>
+								<h4>筛选该图片的其他尺寸:</h4>
+								<div id="sizeFilter" class="subFilter"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="middle_content">
+					<div id="commonImg">
+						<div id="jps"></div>
+						<div id="jbaike"></div>
+						<div id="dateFilterWrap" class="clearfix">
+							<span class="date-filter-title">按时间筛选:</span>
+							<div id="dateFilter" class="subFilter"></div>
+						</div>
+						<div class='bk-bottom-line'></div>
+						<div id="main"></div>
+					</div>
+					<div id="filterImg"></div>
+					<div id="page">
+						<div id="pgw" class="pg"></div>
+						<div id="resultInfo"></div>
+					</div>
+					<div id="noPage">
+						<div id="dataNone"
+							style="margin: 0; font-size: 14px; line-height: 20px;">抱歉，在该筛选条件下，没有找到相关的图片。</div>
+						<div id="stdNone"
+							style="margin: 0;; font-size: 14px; line-height: 20px;">
+							<br />
+							<font class="fB" style="font-size: 14px">百度建议您：</font>
+							<div style="font-size: 14px; margin-top: 0px; margin-left: 15px;">
+								<li id="listSetDefault"><a href="javascript:void(0)"
+									onclick="BD.STU.filter.setDefault();">取消筛选功能</a></li>
+								<li>修改当前的筛选条件</li>
+							</div>
+							<div id=DivPost style="margin-top: 0px; margin-left: 15px;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<div id="ft">
+		&copy;2013 Baidu<span> 此内容系百度根据您的指令自动搜索的结果，不代表百度赞成被搜索网站的内容或立场</span>
+	</div>
+	<script language="javascript" src="js/search_detail2.js?v=20130315"></script>
+	<script language="javascript" src="js/result.js?v=20130315"></script>
+	<script type="text/javascript" charset="utf-8"
+		src="js/tangram.js?v=1.0"></script>
+	<script language="javascript">
+		var tabdata = {
+			beforect : 2,
+			inputValue : "2.jpg"
+		};/*tabReTake(tabdata);*/
+		var imgdata = {
+			imgName : "2.jpg",
+			imgQuerySign : "731338422,705834918",
+			dispNum : 1,
+			listNum : 1,
+			rank : 0,
+			beforeCt : 2,
+			keyword : "",
+			data : [
+					{
+						thumbURL : "http://t1.baidu.com/it/u=896577302,2733858154&fm=21&gp=0.jpg",
+						objURL : "896577302,2733858154",
+						curNum : 0,
+						objURLEnc : "http://pic.anhuinews.com/0/01/62/53/1625354_714293.jpg",
+						fromURLEnc : "http://ah.anhuinews.com/system/2009/01/18/002194020.shtml",
+						fromURLHost : "http://ah.anhuinews.com",
+						width : 550,
+						height : 733,
+						objId : 888514419,
+						objType : "jpg",
+						time : "2009-01-18",
+						fileSize : "360",
+						fromPageTitle : "《坝上街》:合肥人打造的合肥故事   ",
+						fromPageTitleEnc : "《坝上街》:合肥人打造的合肥故事   ",
+						textHost : "\" (魏俊杰,宋艺)    "
+					}, {} ]
+		};
+	</script>
+	<script>
+		if (!(location.hash.length > 1 && BD.STU.ParamsBus
+				.isDifSearchHash(BD.STU.ParamsBus.getHashConf()))) {
+			BD.STU.model.ImageData.storeData(imgdata, 0);
+		}
+		BD.STU.publish("view.init");
+		ss({
+			p : 'pv',
+			data : '1',
+			tntype : 'stu',
+			tn : 'baiduimagepc',
+			face : window.__hasFace
+		});
+		if (!baidu.swf.version) {
+			baidu.g('flashcontent').style.display = 'none';
+		} else {
+			baidu.swf
+					.create(
+							{
+								id : "STUUpload",
+								url : "fl/STUpload2.swf?v=3.0",
+								width : "65",
+								height : "15",
+								align : "top",
+								wmode : "transparent",
+								errorMessage : "载入FLASH出错",
+								vars : {
+									uploadurl : "/i?rt=0&rn=10&stt=0&ct=0&tn=baiduimagepc&fr=flash",
+									logurl : "/5.gif?class=stu&fr=flash&t=",
+									compress : "1"
+								},
+								ver : "9.0.0"
+							}, "flashcontent");
+		}
+	</script>
+</body>
+</html>
+

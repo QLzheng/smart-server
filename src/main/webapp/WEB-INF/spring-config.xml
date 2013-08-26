@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/data/mongo
+    http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">	
+
+	<bean id="placeholderConfig" class="com.tcl.smart.server.util.PropertyConfigurer">
+		<property name="location">
+			<value>WEB-INF/spring.properties</value>
+		</property>
+	</bean>
+	
+	<mongo:db-factory id="mongoDbFactory" host="${db.host}"
+		port="${db.port}" dbname="${db.name}" username="${db.user}" password="${db.password}"
+		mongo-ref="myMongo" />
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+	</bean>
+	<mongo:mongo id="myMongo" host="${db.host}" port="${db.port}">
+		<mongo:options connections-per-host="100" />
+	</mongo:mongo>
+	
+		<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.FormHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.ResourceHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes" value="text/plain;charset=UTF-8" />
+				</bean>
+				<bean
+					class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+	
+		<bean id="propertiesBean" class="com.tcl.smart.server.util.PropertiesBean" init-method="init">
+		<property name="recommendIp" value="${recommend.ip}"></property>
+		<property name="recommendPort" value="${recommend.port}"></property>
+		<property name="recommendProj" value="${recommend.project}"></property>
+		<property name="recommendBehavior" value="${recommend.behavior.req}"></property>
+		<property name="recommendRecommend" value="${recommend.recommend.req}"></property>
+		<property name="recommendReset" value="${recommend.reset.req}"></property>
+		<property name="recommendResetall" value="${recommend.resetall.req}"></property>
+		<property name="recommendPicWebPrefix" value="${recommend.pic.webPrefix}"></property>
+		<property name="recommendPicFolder1" value="${recommend.pic.folder1}"></property>
+		<property name="recommendPicFolder2" value="${recommend.pic.folder2}"></property>
+		<property name="recommendPicDefault" value="${recommend.pic.default}"></property>
+		<property name="imageFolder" value="${image.folder}"></property>
+		<property name="codeImgFolder" value="${code.img.folder}"></property>
+		<property name="serializeFolder" value="${serialize.folder}"></property>
+		<property name="recommendQueryItem" value="${recommend.queryItem.req}"></property>
+		<property name="recommendCliveIp" value="${recommend.clive.ip}"></property>
+		<property name="recommendClivePort" value="${recommend.clive.port}"></property>
+		<property name="recommendCliveProj" value="${recommend.clive.project}"></property>
+		<property name="recommendCliveRecommend" value="${recommend.clive.recommend.req}"></property>
+		<property name="recommendCliveTrainOnce" value="${recommend.clive.train.once}"></property>
+		<property name="viewPage" value="${view.page}"></property>
+		<property name="defaultVideoUrl" value="${video.default.url}"></property>
+		<property name="baikeFolder" value="${baike.htm.folder}"></property>
+		<property name="hotlinkingImgFolder" value="${hotlinking.img.folder}"></property>
+	</bean>
+
+	<bean id="constants" class="com.tcl.smart.server.util.Constants">
+		<property name="properties" ref="propertiesBean" />
+	</bean>
+
+	<bean id="videoDao" class="com.tcl.smart.server.dao.impl.VideoDao"
+		init-method="init" />
+
+	<bean id="newsClassificationDao" class="com.tcl.smart.server.dao.impl.NewsClassificationDao"
+		init-method="init" />
+	<bean id="newsItemDao" class="com.tcl.smart.server.dao.impl.NewsItemDao"
+		init-method="init" />
+
+	<bean id="newsTimingCrawlerService"
+		class="com.tcl.smart.server.service.impl.NewsTimingCrawlerService">
+		<constructor-arg name="periodMinute" value="10" />
+	</bean>
+
+	<bean id="huanApiService" class="com.tcl.smart.server.service.impl.HuanApiService" />
+	<bean id="tvListDao" class="com.tcl.smart.server.dao.impl.TvListDao" />
+	<bean id="newsSearchRstItemDao" class="com.tcl.smart.server.dao.impl.NewsSearchRstItemDao" init-method="init" />
+	<bean id="newsRssSearchService" class="com.tcl.smart.server.service.impl.NewsRssSearchService" />
+	<bean id="epgModelDao" class="com.tcl.smart.server.dao.impl.EpgModelDao" init-method="init" />
+	<bean id="newsDailyCrawlerByKeywordsService" class="com.tcl.smart.server.service.impl.NewsDailyCrawlerByKeywordsService">
+	    <constructor-arg name="dailyRunHour" value="1" />
+	    <constructor-arg name="timingPeriod" value="10" />
+	    <constructor-arg name="runNow" value="false" />
+    </bean>
+    <bean id="movieDao" class="com.tcl.smart.server.dao.impl.MovieDao" init-method="init" />
+    
+    <bean id="recommendNewsDao" class="com.tcl.smart.server.dao.impl.RecommendNewsDao" init-method="init">
+        <constructor-arg name="dbName" value="${db.recNews}" /> 
+        <constructor-arg name="newsDao" ref="newsSearchRstItemDao"/>
+        <constructor-arg name="movieDao" ref="movieDao"/>
+    </bean>
+    
+    <bean id="recommendResultUpdate" class="com.tcl.smart.server.update.RecommendResultUpdate">
+        <constructor-arg name="recNewsDao" ref="recommendNewsDao"/> 
+        <constructor-arg name="epgDao" ref="epgModelDao"/>
+        <constructor-arg name="programNewsDao" ref="newsSearchRstItemDao"/>
+        <!-- <constructor-arg name="newsSortService" ref="newsSortByTimeDesc"/> -->
+        <constructor-arg name="newsSortService" ref="newSortByKeys"/>
+        <constructor-arg name="logInfo" ref="logInformation"/>
+    </bean>
+    
+<!--     <bean id="baikeRecommendResultUpdate" class="com.tcl.smart.server.update.WikiUpdate">
+        <constructor-arg name="wikiDao" ref="wikiDao"/> 
+        <constructor-arg name="epgDao" ref="epgModelDao"/>
+        <constructor-arg name="movieDao" ref="movieDao"/>
+        <constructor-arg name="baikeDao" ref="baikeBeanDao"/>
+        <constructor-arg name="baikeSort" ref="baikeSortService"/>
+        <constructor-arg name="baikeSearch" ref="baikeSearchService"/>
+    </bean>   --> 
+     
+    <bean id="wikiDao" class="com.tcl.smart.server.dao.impl.RecommendWikiDao" init-method="init">
+        <constructor-arg name="dbName" value="${db.epg_baike_rec}" /> 
+        <constructor-arg name="baikeDao" ref="baikeBeanDao"/>
+        <constructor-arg name="movieDao" ref="movieDao"/>
+        <constructor-arg name="epgDao" ref="epgModelDao"/>
+    </bean>
+    
+    <bean id="baikeSortService" class="com.tcl.smart.server.recommend.BaikeSortByFeatureCount" />
+        
+    <bean id="newsSortByTimeDesc" class="com.tcl.smart.server.recommend.NewsSortByTimeDesc"></bean>
+    <bean id="newsSortByFeatureCount" class="com.tcl.smart.server.recommend.NewsSortByFeatureCount"></bean>
+    <bean id="NewsSortByCombine2Sort" class="com.tcl.smart.server.recommend.NewsSortByCombine2Sort">
+    	<constructor-arg name="sortMethod_1" ref="newsSortByTimeDesc"/> 
+        <constructor-arg name="sortMethod_2" ref="newsSortByFeatureCount"/>
+        <constructor-arg name="valueForMethod_1" value="0.6"/>
+    </bean>
+    
+    <bean id="newSortByKeys" class="com.tcl.smart.server.recommend.NewSortByKeys">
+        <constructor-arg name="newsSortService" ref="newsSortByTimeDesc"/>
+    </bean>
+    
+    <bean id="periodicUpdateEngine" class="com.tcl.smart.server.update.PeriodicUpdateEngine">
+        <constructor-arg name="updates">
+           <list>
+               <ref bean="recommendResultUpdate" />
+           </list>
+       </constructor-arg>
+       <constructor-arg name="interval" value="${periodic_update_interval}"/>
+    </bean>
+    
+    <bean id="featureNewsDao" class="com.tcl.smart.server.dao.impl.FeatureNewsDao" init-method="init">
+        <constructor-arg name="dbName" value="${db.featureNews}" /> 
+    </bean>
+    
+    <bean id="featureNewsUpdate" class="com.tcl.smart.server.update.FeatureNewsUpdate">
+         <constructor-arg name="programNewsDao" ref="newsSearchRstItemDao"/>
+         <constructor-arg name="featureNewsDao" ref="featureNewsDao"/>
+    </bean>
+    
+    <bean id="hybridRecommenderUpdate" class="com.tcl.smart.server.update.HybridRecommenderUpdate">
+         <constructor-arg name="featureNewsDao" ref="featureNewsDao"/>
+         <constructor-arg name="sortNews" ref="newsSortByTimeDesc"/>
+         <constructor-arg name="epgDao" ref="epgModelDao"/>
+         <constructor-arg name="movieDao" ref="movieDao"/>
+         <constructor-arg name="newsDao" ref="newsSearchRstItemDao"/>
+         <constructor-arg name="recNewsDao" ref="recommendNewsDao"/>
+    </bean>
+    
+    <bean id="yihaodianProductDao" class="com.tcl.smart.server.dao.impl.YihaodianProductDao" init-method="init">
+        <constructor-arg name="dbColName" value="${db.yihaodianProduct}" />
+        <constructor-arg name="key_products_db_colName" value="${db.key_products_db_col}" /> 
+    </bean>
+    
+    <bean id="baikeUrlDao" class="com.tcl.smart.server.dao.impl.BaikeUrlDao" />
+    <bean id="baikeBeanDao" class="com.tcl.smart.server.dao.impl.BaikeBeanDao" />
+    <bean id="baikeSearchService" class="com.tcl.smart.server.service.impl.BaikeSearchService" />
+    <bean id="baikeSearchServiceForDailyCrawler" class="com.tcl.smart.server.service.impl.BaikeSearchService" />
+    <bean id="baikeSearchServiceForRecommend" class="com.tcl.smart.server.service.impl.BaikeSearchService" />
+    <bean id="baikeDailyCrawlerService" class="com.tcl.smart.server.service.impl.BaikeDailyCrawlerService">
+	    <constructor-arg name="dailyRunHour" value="1" />
+	    <constructor-arg name="runNow" value="true" />
+    </bean>
+    <bean id="YihaodianDailyCrawlerService" class="com.tcl.smart.server.service.impl.YihaodianDailyCrawlerService">
+    	<constructor-arg name="dailyRunHour" value="1" />
+	    <constructor-arg name="runNow" value="true" />
+    </bean>
+    
+    <bean id="recommendWikiDao" class="com.tcl.smart.server.dao.impl.RecommendWikiDao" init-method="init">
+        <constructor-arg name="dbName" value="${db.recWiki}" /> 
+        <constructor-arg name="baikeDao" ref="baikeBeanDao"/>
+        <constructor-arg name="movieDao" ref="movieDao"/>
+        <constructor-arg name="epgDao" ref="epgModelDao"/>
+    </bean>
+    
+    <bean id="yihaodianApiService" class="com.tcl.smart.server.service.impl.YihaodianApiService">
+	    <constructor-arg name="productDao" ref="yihaodianProductDao" />
+    </bean>
+    
+    <bean id="wikiUpdate" class="com.tcl.smart.server.update.WikiUpdate">
+         <constructor-arg name="wikiDao" ref="recommendWikiDao"/>
+         <constructor-arg name="epgDao" ref="epgModelDao"/>
+         <constructor-arg name="movieDao" ref="movieDao"/>
+         <constructor-arg name="baikeDao" ref="baikeBeanDao"/>
+         <constructor-arg name="baikeSort" ref="baikeSortService"/>
+         <constructor-arg name="baikeSearch" ref="baikeSearchServiceForRecommend"/>
+         <constructor-arg name="logInfo" ref="logInformation"/>
+    </bean>
+    
+
+    <bean id="rcommendProductDao" class="com.tcl.smart.server.dao.impl.RcommendProductDao" init-method="init">
+        <constructor-arg name="dbName" value="${db.productRec}" />
+        <constructor-arg name="productDao" ref="yihaodianProductDao"/>
+        <constructor-arg name="epgDao" ref="epgModelDao"/>
+        <constructor-arg name="movieDao" ref="movieDao"/>
+    </bean>
+    
+    <bean id="productRecommendUpdate" class="com.tcl.smart.server.update.ProductRecommendUpdate">
+        <constructor-arg name="epgDao" ref="epgModelDao"/>
+        <constructor-arg name="recProductDao" ref="rcommendProductDao"/>
+        <constructor-arg name="yiHaoDianProDao" ref="yihaodianProductDao"/>
+        <constructor-arg name="movieDao" ref="movieDao"/>
+        <constructor-arg name="numberThreads" value="${product_recommend_update_thread}"/>
+        <constructor-arg name="logInfo" ref="logInformation"/>
+    </bean>
+    
+    <bean id="dailyUpdateProdectRec" class="com.tcl.smart.server.update.DailyUpdateProdectRec">
+         <constructor-arg name="updates">
+           <list>
+               <ref bean="wikiUpdate"/>
+               <ref bean="productRecommendUpdate" />
+           </list>
+       </constructor-arg>
+    </bean>
+    
+    <bean id="baikeRecommendService" class="com.tcl.smart.server.update.WikiUpdate">
+        <constructor-arg name="wikiDao" ref="wikiDao"/> 
+        <constructor-arg name="epgDao" ref="epgModelDao"/>
+        <constructor-arg name="movieDao" ref="movieDao"/>
+        <constructor-arg name="baikeDao" ref="baikeBeanDao"/>
+        <constructor-arg name="baikeSort" ref="baikeSortService"/>
+        <constructor-arg name="baikeSearch" ref="baikeSearchServiceForRecommend"/>
+    </bean>    
+    
+    <bean id="favorateProductDao" class="com.tcl.smart.server.dao.impl.FavorateProductDao" />
+    <bean id="specifiedKeywordDao" class="com.tcl.smart.server.dao.impl.SpecifiedKeywordDao" />
+        
+    <bean id="codeImgService" class="com.tcl.smart.server.service.impl.CodeImgService" />
+    <bean id="demoDataService" class="com.tcl.smart.server.service.impl.DemoDataService" />
+    
+    
+    <!--Log related beans  -->
+    <bean id="logInformation" class="com.tcl.smart.server.dao.impl.LogInformation" init-method="init">
+        <constructor-arg name="dbName" value="${log_information}"/>
+    </bean>
+    
+</beans>
